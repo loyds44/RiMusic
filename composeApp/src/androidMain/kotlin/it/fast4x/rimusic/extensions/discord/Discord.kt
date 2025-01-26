@@ -117,6 +117,7 @@ fun sendDiscordPresence(
 ) {
     if (token.isEmpty()) return
 
+    val mediaId = mediaItem.mediaId
     val rpc = KizzyRPC(token)
     rpc.setActivity(
         activity = Activity(
@@ -130,16 +131,21 @@ fun sendDiscordPresence(
                 end = timeEnd
             ),
             assets = Assets(
-                largeImage = "https://i.ytimg.com/vi/${mediaItem.mediaId}/maxresdefault.jpg",
-                smallImage = "mp:{icona_rimusic}",
+                largeImage = mediaId?.let { 
+                    "https://i.ytimg.com/vi/$it/maxresdefault.jpg" 
+                } ?: "https://raw.githubusercontent.com/fast4x/RiMusic/master/assets/design/latest/app_icon.svg",
+                smallImage = "https://raw.githubusercontent.com/fast4x/RiMusic/master/assets/design/latest/app_icon.svg",
                 //largeText = mediaItem.mediaMetadata.title.toString(),
                 //smallText = mediaItem.mediaMetadata.artist.toString(),
             ),
-            buttons = listOf("Get RiMusic", "Listen to YTMusic"),
+             buttons = listOf(
+                Button("Get RiMusic", "https://rimusic.xyz/"),
+                Button("Listen to YTMusic", "https://music.youtube.com/watch?v=$mediaId")
+             ),
             metadata = com.my.kizzyrpc.model.Metadata(
                 listOf(
                     "https://rimusic.xyz/",
-                    "https://music.youtube.com/watch?v=${mediaItem.mediaId}",
+                    "https://music.youtube.com/watch?v=$mediaId"
                 )
             )
         ),
